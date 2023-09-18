@@ -1,5 +1,5 @@
 export const initialStore = {
-    preview: false,
-    errors:[],
-    validatedToken:[]
-}
+  preview: false,
+  errors: [],
+  validatedToken: [],
+};

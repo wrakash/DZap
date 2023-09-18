@@ -1,19 +1,13 @@
 import React from "react";
 import DisperseForm from "./DisperseForm";
-import DisperseOutput from "./DisperseOutput";
 import DisperseError from "./DisperseError";
 import DispersePreview from "./DispersePreview";
 import { useDisperse } from "./useDisperse";
 
+
 export const Disperse = () => {
-  const {
-    tokenList,
-    setTokenList,
-    submit,
-    onPreviewClick,
-    keepFirst,
-    combineBalance,
-  } = useDisperse();
+  const { tokenList, setTokenList, submit, keepFirst, combineBalance, onPreviewClick } =
+    useDisperse();
 
   return (
     <div className="py-8 space-y-8">
@@ -21,10 +15,11 @@ export const Disperse = () => {
         tokenList={tokenList}
         setTokenList={setTokenList}
         submit={submit}
+        onPreviewClick={onPreviewClick}
       />
-      <DisperseOutput />
+
       <DisperseError keepFirst={keepFirst} combineBalance={combineBalance} />
-      <DispersePreview onPreviewClick={onPreviewClick} />
+      <DispersePreview />
     </div>
   );
 };

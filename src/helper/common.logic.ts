@@ -1,22 +1,6 @@
 import { ErrorType, InputType } from "../type";
 
-export const keepFirstFromDuplicates = (inputArray: InputType[]) => {
-  const seenStrings: any = {};
-  const resultArray: InputType[] = [];
-
-  inputArray?.forEach(({ addressWithAmount }, index) => {
-    const [address, amount] = addressWithAmount.split(/,| |=/);
-
-    if (!seenStrings[address]) {
-      resultArray.push({ addressWithAmount });
-      seenStrings[address] = true;
-    }
-  });
-
-  return resultArray;
-};
-
-const getSymbols = (addressWithAmount: String) => {
+export const getSymbols = (addressWithAmount: String) => {
   if (addressWithAmount.includes("=")) {
     return "=";
   } else if (addressWithAmount.includes(",")) {
@@ -26,22 +10,34 @@ const getSymbols = (addressWithAmount: String) => {
   }
 };
 
-export const combineBalanceFromDuplicates = (inputArray: InputType[]) => {
-  const combineBalance: any = {};
-  let symbol: string;
-  inputArray.forEach(({ addressWithAmount }) => {
-    const [address, amount] = addressWithAmount.split(/,| |=/);
-    symbol = getSymbols(addressWithAmount)
-    if (combineBalance[address]) {
-      combineBalance[address] += parseInt(amount);
-    } else {
-      combineBalance[address] = parseInt(amount);
+export const keepFirstFromDuplicates = (inputArray: InputType[]) => {
+  const seenStrings: any = {};
+  const resultArray: InputType[] = [];
+
+  inputArray?.forEach(({ lineNo, address, amount, splitingOperater }) => {
+    if (!seenStrings[address]) {
+      resultArray.push({ lineNo, address, amount, splitingOperater });
+      seenStrings[address] = true;
     }
   });
-  const combinedArray = Object.keys(combineBalance).map((address) => ({
-    addressWithAmount: `${address}${symbol}${combineBalance[address]}`,
-  }));
-  return combinedArray;
+
+  return resultArray;
+};
+
+export const combineBalanceFromDuplicates = (inputArray: InputType[]) => {
+  const resultMap: { [key: string]: InputType } = {};
+  inputArray.forEach(({ lineNo, address, amount, splitingOperater }) => {
+    const key = address;
+    if (resultMap[key]) {
+      resultMap[key].amount = (
+        parseInt(resultMap[key].amount) + parseInt(amount)
+      ).toString();
+    } else {
+      resultMap[key] = { lineNo, address, amount, splitingOperater };
+    }
+  });
+  const resultArray: InputType[] = Object.values(resultMap);
+  return resultArray;
 };
 
 export const groupData = (inputArray: ErrorType[]) => {
@@ -63,10 +59,7 @@ export const validationCheck = (validatedTokenArray: InputType[]) => {
   const errors: ErrorType[] = [];
   const addressMap = new Map();
 
-  validatedTokenArray.forEach(({ addressWithAmount }, index) => {
-    const [address, amount] = addressWithAmount.split(/,| |=/);
-    const isValidAmount = /^[0-9]+$/.test(amount);
-
+  validatedTokenArray.forEach(({ address, amount }, index) => {
     if (addressMap.has(address)) {
       const prevIndices = addressMap.get(address);
       prevIndices.push(index + 1);
@@ -74,6 +67,7 @@ export const validationCheck = (validatedTokenArray: InputType[]) => {
       addressMap.set(address, [index + 1]);
     }
 
+    const isValidAmount = /^[0-9]+$/.test(amount);
     if (!isValidAmount) {
       errors.push({
         type: "Wrong Amount",

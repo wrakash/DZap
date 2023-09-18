@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ErrorType, InputType } from "../../type";
 import { MyContext } from "../../store/MyContext";
 import {
@@ -12,19 +12,24 @@ import {
 export const useDisperse = () => {
   const { store, setStore } = useContext(MyContext);
 
+  
+
   const [tokenList, setTokenList] = useState<InputType[]>([
-    { addressWithAmount: "" },
+    { lineNo: 1, address: "", amount: "", splitingOperater:"" },
   ]);
 
-  const keepFirst = () => {
+  const keepFirst = useCallback(() => {
     const validatedToken = keepFirstFromDuplicates(store.validatedToken);
     const errors = groupData(validationCheck(validatedToken));
+
+    setTokenList(validatedToken);
+
     setStore({
       ...store,
       errors,
       validatedToken: validatedToken,
     });
-  };
+  }, [store, setStore]);
 
   const combineBalance = () => {
     const validatedToken = combineBalanceFromDuplicates(store.validatedToken);
@@ -36,31 +41,27 @@ export const useDisperse = () => {
     });
   };
 
+  const submit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const filteredTokens = tokenList.filter((token) => token.address !== "" && token.address !== "")
+      const errors = groupData(validationCheck(filteredTokens));
+      setStore({
+        ...store,
+        errors,
+        validatedToken: filteredTokens,
+      });
+    },
+    [tokenList, store, setStore]
+  );
+
   const onPreviewClick = () => {
     setStore({
       ...store,
       preview: true,
     });
   };
-
-  const submit = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      const errors = groupData(validationCheck(tokenList));
-
-      setStore({
-        ...store,
-        errors,
-        preview: false,
-        validatedToken: tokenList.filter(
-          (token) => token.addressWithAmount !== ""
-        ),
-      });
-    },
-    [tokenList, store, setStore]
-  );
-
+  
   return {
     tokenList,
     setTokenList,

@@ -1,5 +1,8 @@
 export interface InputType {
-  addressWithAmount: string;
+  splitingOperater: string;
+  lineNo: number;
+  address: string;
+  amount: string;
 }
 
 export interface ErrorType {
