@@ -42,7 +42,7 @@ export const DynamicInput: React.FC<DynamicInputProps> = ({
       {inputList.map((x, i) => (
         <div
           key={i}
-          className="w-full md:space-y-0 md:flex md:items-end lg:items-center md:space-x-4"
+          className="w-full space-y-3 md:space-y-0 md:flex md:items-end lg:items-center md:space-x-4"
         >
           <TextInput
             name="addressWithAmount"
@@ -66,7 +66,7 @@ export const DynamicInput: React.FC<DynamicInputProps> = ({
               <button
                 type="button"
                 onClick={() => handleRemoveClick(i)}
-                className="bg-red-500 text-white px-2 py-1 lg:mt-4 rounded"
+                className="bg-red-500 text-white px-2 py-1 lg:mt-[23px] rounded"
               >
                 Remove
               </button>
@@ -77,7 +77,7 @@ export const DynamicInput: React.FC<DynamicInputProps> = ({
               onClick={handleAddClick}
               className={`bg-green-500 ${
                 inputList.length - 1 === i ? "visible" : "invisible"
-              } text-white px-2 py-1 lg:mt-4 rounded`}
+              } text-white px-2 py-1 lg:mt-[23px] rounded`}
             >
               Add
             </button>

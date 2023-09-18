@@ -18,11 +18,11 @@ const DisperseError: React.FC<Props> = ({ keepFirst, combineBalance }) => {
             return (
               <div key={index} className="space-y-2">
                 {error.type === "Duplicated" && (
-                  <div className="w-full flex justify-between">
+                  <div className="w-full flex flex-col lg:flex-row  lg:justify-between">
                     <div>
                       <p className="text-red-500">Duplicated</p>
                     </div>
-                    <div className="flex space-x-4">
+                    <div className="flex  space-x-4">
                       <button onClick={keepFirst} className="text-red-500">
                         Keep the first one
                       </button>
