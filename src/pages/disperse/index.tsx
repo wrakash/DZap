@@ -4,9 +4,8 @@ import DisperseError from "./DisperseError";
 import DispersePreview from "./DispersePreview";
 import { useDisperse } from "./useDisperse";
 
-
 export const Disperse = () => {
-  const { tokenList, setTokenList, submit, keepFirst, combineBalance, onPreviewClick } =
+  const { tokenList, setTokenList, submit, keepFirst, combineBalance } =
     useDisperse();
 
   return (
@@ -15,7 +14,6 @@ export const Disperse = () => {
         tokenList={tokenList}
         setTokenList={setTokenList}
         submit={submit}
-        onPreviewClick={onPreviewClick}
       />
 
       <DisperseError keepFirst={keepFirst} combineBalance={combineBalance} />
